@@ -2,6 +2,8 @@ import { MockExtractor } from '../extractors/mock.extractor';
 import { VidSrcExtractor } from '../extractors/vidsrc.extractor';
 import { VidLinkExtractor } from '../extractors/vidlink.extractor';
 import { AutoEmbedExtractor } from '../extractors/autoembed.extractor';
+import { TwoEmbedExtractor } from '../extractors/twoembed.extractor';
+import { SuperEmbedExtractor } from '../extractors/superembed.extractor';
 import { CacheService } from './cache.service';
 import { StreamResponse } from '../types';
 
@@ -16,10 +18,12 @@ export class StreamingService {
 
   private initializeExtractors(): void {
     this.extractors = [
-      new VidSrcExtractor(),      // Primary source - improved
-      new MockExtractor(),        // Backup for testing
-      new VidLinkExtractor(),     // Backup source 1
-      new AutoEmbedExtractor(),   // Backup source 2
+      new TwoEmbedExtractor(),     // Try 2Embed first - usually reliable
+      new SuperEmbedExtractor(),   // Try SuperEmbed second
+      new VidSrcExtractor(),      // Try VidSrc third
+      new VidLinkExtractor(),     // Try VidLink fourth
+      new AutoEmbedExtractor(),   // Try AutoEmbed fifth
+      new MockExtractor(),        // Fallback to working video
     ];
   }
 
