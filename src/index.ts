@@ -1,9 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { StreamingService } from './services/streaming.service';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const streamingService = new StreamingService();
 
 // Middleware
 app.use(helmet({
@@ -29,7 +31,8 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    cache: streamingService.getCacheStats()
   });
 });
 
@@ -64,25 +67,18 @@ app.post('/api/stream', async (req, res) => {
 
     console.log(`Processing request: ${type} ${tmdbId}${type === 'tv' ? ` S${season}E${episode}` : ''}`);
 
-    // Mock response for now
-    const result = {
-      success: true,
-      sources: [{
-        url: 'https://example.com/stream.m3u8',
-        quality: '1080p',
-        format: 'm3u8',
-        headers: {
-          'Referer': 'https://example.com'
-        }
-      }],
-      subtitles: [{
-        url: 'https://example.com/subtitle.vtt',
-        language: 'ar',
-        label: 'Arabic'
-      }]
-    };
+    const result = await streamingService.getStream(
+      tmdbId.toString(),
+      type as 'movie' | 'tv',
+      season ? parseInt(season.toString()) : undefined,
+      episode ? parseInt(episode.toString()) : undefined
+    );
 
-    res.json(result);
+    if (result.success) {
+      res.json(result);
+    } else {
+      res.status(404).json(result);
+    }
 
   } catch (error) {
     console.error('API Error:', error);
@@ -93,6 +89,49 @@ app.post('/api/stream', async (req, res) => {
       subtitles: []
     });
   }
+});
+
+// Batch streaming endpoint
+app.post('/api/stream/batch', async (req, res) => {
+  try {
+    const { requests } = req.body;
+
+    if (!Array.isArray(requests) || requests.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid requests array'
+      });
+    }
+
+    const results = await streamingService.getMultipleStreams(requests);
+    res.json({
+      success: true,
+      results
+    });
+
+  } catch (error) {
+    console.error('Batch API Error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error'
+    });
+  }
+});
+
+// Cache management endpoints
+app.post('/api/cache/clear', (req, res) => {
+  streamingService.clearCache();
+  res.json({
+    success: true,
+    message: 'Cache cleared successfully'
+  });
+});
+
+app.get('/api/cache/stats', (req, res) => {
+  res.json({
+    success: true,
+    stats: streamingService.getCacheStats()
+  });
 });
 
 // Error handling middleware
@@ -117,6 +156,7 @@ app.listen(PORT, () => {
   console.log(`🚀 Naji Play Engine running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
   console.log(`🎬 Streaming API: http://localhost:${PORT}/api/stream`);
+  console.log(`🔄 Cache stats: http://localhost:${PORT}/api/cache/stats`);
 });
 
 export default app;
