@@ -13,8 +13,20 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://yourdomain.com'],
-  credentials: true
+  origin: [
+    'http://localhost:3000', 
+    'https://yourdomain.com',
+    'http://localhost:8080',     // Flutter web development
+    'http://127.0.0.1:8080',    // Flutter web development
+    'https://localhost:8080',    // Flutter web development (HTTPS)
+    'https://127.0.0.1:8080',   // Flutter web development (HTTPS)
+    'capacitor://localhost',       // Capacitor (mobile app)
+    'http://localhost:3000',      // Local development
+    'https://naji-play-engine-s3j7.onrender.com' // Production URL
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 app.use(express.json({ limit: '10mb' }));
