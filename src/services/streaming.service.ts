@@ -4,6 +4,7 @@ import { VidLinkExtractor } from '../extractors/vidlink.extractor';
 import { AutoEmbedExtractor } from '../extractors/autoembed.extractor';
 import { TwoEmbedExtractor } from '../extractors/twoembed.extractor';
 import { SuperEmbedExtractor } from '../extractors/superembed.extractor';
+import { CloudflareExtractor } from '../extractors/cloudflare.extractor';
 import { CacheService } from './cache.service';
 import { StreamResponse } from '../types';
 
@@ -18,11 +19,12 @@ export class StreamingService {
 
   private initializeExtractors(): void {
     this.extractors = [
-      new TwoEmbedExtractor(),     // Try 2Embed first - usually reliable
-      new SuperEmbedExtractor(),   // Try SuperEmbed second
-      new VidSrcExtractor(),      // Try VidSrc third
-      new VidLinkExtractor(),     // Try VidLink fourth
-      new AutoEmbedExtractor(),   // Try AutoEmbed fifth
+      new CloudflareExtractor(),   // Try Cloudflare bypass first
+      new TwoEmbedExtractor(),     // Try 2Embed second
+      new SuperEmbedExtractor(),   // Try SuperEmbed third
+      new VidSrcExtractor(),      // Try VidSrc fourth
+      new VidLinkExtractor(),     // Try VidLink fifth
+      new AutoEmbedExtractor(),   // Try AutoEmbed sixth
       new MockExtractor(),        // Fallback to working video
     ];
   }
