@@ -1,3 +1,4 @@
+import { MockExtractor } from '../extractors/mock.extractor';
 import { VidSrcExtractor } from '../extractors/vidsrc.extractor';
 import { VidLinkExtractor } from '../extractors/vidlink.extractor';
 import { AutoEmbedExtractor } from '../extractors/autoembed.extractor';
@@ -15,6 +16,7 @@ export class StreamingService {
 
   private initializeExtractors(): void {
     this.extractors = [
+      new MockExtractor(),        // Temporary mock for testing
       new VidSrcExtractor(),      // Primary source
       new VidLinkExtractor(),     // Backup source 1
       new AutoEmbedExtractor(),   // Backup source 2
