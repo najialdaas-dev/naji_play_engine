@@ -16,8 +16,8 @@ export class StreamingService {
 
   private initializeExtractors(): void {
     this.extractors = [
-      new MockExtractor(),        // Temporary mock for testing
-      new VidSrcExtractor(),      // Primary source
+      new VidSrcExtractor(),      // Primary source - improved
+      new MockExtractor(),        // Backup for testing
       new VidLinkExtractor(),     // Backup source 1
       new AutoEmbedExtractor(),   // Backup source 2
     ];
