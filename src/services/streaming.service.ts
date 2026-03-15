@@ -5,6 +5,7 @@ import { AutoEmbedExtractor } from '../extractors/autoembed.extractor';
 import { TwoEmbedExtractor } from '../extractors/twoembed.extractor';
 import { SuperEmbedExtractor } from '../extractors/superembed.extractor';
 import { CloudflareExtractor } from '../extractors/cloudflare.extractor';
+import { SimpleExtractor } from '../extractors/simple.extractor';
 import { CacheService } from './cache.service';
 import { StreamResponse } from '../types';
 
@@ -19,7 +20,7 @@ export class StreamingService {
 
   private initializeExtractors(): void {
     this.extractors = [
-      new CloudflareExtractor(),   // Try Cloudflare bypass first
+      new SimpleExtractor(),       // Try simple extractor first (no Puppeteer)
       new TwoEmbedExtractor(),     // Try 2Embed second
       new SuperEmbedExtractor(),   // Try SuperEmbed third
       new VidSrcExtractor(),      // Try VidSrc fourth
