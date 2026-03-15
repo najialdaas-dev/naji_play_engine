@@ -39,10 +39,14 @@ app.get('/health', (req, res) => {
 // Main streaming endpoint
 app.post('/api/stream', async (req, res) => {
   try {
+    console.log(`=== API Request Received ===`);
+    console.log(`Body:`, req.body);
+    
     const { tmdbId, type, season, episode } = req.body;
 
     // Validate required parameters
     if (!tmdbId || !type) {
+      console.log(`Validation failed: missing tmdbId or type`);
       return res.status(400).json({
         success: false,
         error: 'Missing required parameters: tmdbId and type are required'
@@ -51,6 +55,7 @@ app.post('/api/stream', async (req, res) => {
 
     // Validate type
     if (!['movie', 'tv'].includes(type)) {
+      console.log(`Validation failed: invalid type ${type}`);
       return res.status(400).json({
         success: false,
         error: 'Invalid type. Must be "movie" or "tv"'
@@ -59,6 +64,7 @@ app.post('/api/stream', async (req, res) => {
 
     // For TV shows, validate season and episode
     if (type === 'tv' && (!season || !episode)) {
+      console.log(`Validation failed: TV show missing season or episode`);
       return res.status(400).json({
         success: false,
         error: 'TV shows require season and episode numbers'
@@ -73,6 +79,8 @@ app.post('/api/stream', async (req, res) => {
       season ? parseInt(season.toString()) : undefined,
       episode ? parseInt(episode.toString()) : undefined
     );
+
+    console.log(`Final result:`, result);
 
     if (result.success) {
       res.json(result);

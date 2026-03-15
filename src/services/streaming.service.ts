@@ -27,6 +27,8 @@ export class StreamingService {
     season?: number, 
     episode?: number
   ): Promise<StreamResponse> {
+    console.log(`=== Starting stream extraction for ${type} ${tmdbId} ===`);
+    
     // Check cache first
     const cached = this.cache.get(tmdbId, type, season, episode);
     if (cached && cached.success) {
@@ -41,6 +43,8 @@ export class StreamingService {
       try {
         console.log(`Trying extractor: ${extractor.constructor.name}`);
         const result = await extractor.extract(tmdbId, type, season, episode);
+        
+        console.log(`Extractor ${extractor.constructor.name} result:`, result);
         
         if (result.success && result.sources.length > 0) {
           console.log(`Success with ${extractor.constructor.name}`);
@@ -64,6 +68,7 @@ export class StreamingService {
       error: 'All extraction sources failed. Please try again later.'
     };
 
+    console.log(`All extractors failed for ${type} ${tmdbId}`);
     return errorResponse;
   }
 
