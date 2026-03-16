@@ -17,10 +17,10 @@ export class EmbedExtractor extends BaseExtractor {
     try {
       console.log(`🎬 EmbedExtractor: Creating embed player for ${type} ${tmdbId}`);
       
-      // Return embed URLs that work with WebView/InAppBrowser
+      // Return embed URLs directly - WebView will handle Cloudflare
       const embedSources = [
         {
-          // Source 1: Vidsrc embed (works in WebView)
+          // Source 1: Vidsrc embed (best quality)
           url: type === 'movie' 
             ? `https://vidsrc.to/embed/movie/${tmdbId}`
             : `https://vidsrc.to/embed/tv/${tmdbId}/${season}/${episode}`,
@@ -31,7 +31,7 @@ export class EmbedExtractor extends BaseExtractor {
           }
         },
         {
-          // Source 2: 2embed embed (works in WebView)
+          // Source 2: 2embed embed (1080p)
           url: type === 'movie'
             ? `https://www.2embed.cc/embed/${tmdbId}`
             : `https://www.2embed.cc/embedtv/${tmdbId}&s=${season}&e=${episode}`,
@@ -42,10 +42,10 @@ export class EmbedExtractor extends BaseExtractor {
           }
         },
         {
-          // Source 3: F2embed embed (works in WebView)
+          // Source 3: Vidsrc pro embed (alternative)
           url: type === 'movie'
-            ? `https://f2embed.cc/movie/${tmdbId}`
-            : `https://f2embed.cc/tv/${tmdbId}/${season}/${episode}`,
+            ? `https://vidsrc.pro/embed/movie/${tmdbId}`
+            : `https://vidsrc.pro/embed/tv/${tmdbId}/${season}/${episode}`,
           quality: '720p',
           isEmbed: true,
           headers: {
@@ -54,48 +54,20 @@ export class EmbedExtractor extends BaseExtractor {
         }
       ];
 
-      // Try each embed source
-      for (const source of embedSources) {
-        try {
-          console.log(`🔍 EmbedExtractor: Testing embed: ${source.url}`);
-          
-          // Just test if the URL is accessible
-          const response = await this.makeRequest(source.url);
-          
-          if (response.status === 200 || response.status === 302) {
-            console.log(`✅ EmbedExtractor: Found working embed: ${source.url}`);
-            
-            return this.createSuccessResponse({
-              streamUrl: source.url,
-              quality: source.quality,
-              subtitles: [{
-                url: 'https://example.com/subtitle.vtt',
-                language: 'ar',
-                label: '🇸🇦 العربية'
-              }],
-              headers: source.headers,
-              isEmbed: source.isEmbed
-            });
-          }
-        } catch (embedError) {
-          console.log(`⚠️ Embed test failed: ${embedError}`);
-          continue;
-        }
-      }
-
-      console.log(`⚠️ EmbedExtractor: All embeds failed, using fallback`);
+      // Just return the first embed URL - no testing needed
+      const selectedEmbed = embedSources[0];
+      console.log(`✅ EmbedExtractor: Returning embed URL: ${selectedEmbed.url}`);
       
-      // Fallback to working video
       return this.createSuccessResponse({
-        streamUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        quality: '720p',
+        streamUrl: selectedEmbed.url,
+        quality: selectedEmbed.quality,
         subtitles: [{
           url: 'https://example.com/subtitle.vtt',
           language: 'ar',
           label: '🇸🇦 العربية'
         }],
-        headers: this.config.headers,
-        isEmbed: false
+        headers: selectedEmbed.headers,
+        isEmbed: selectedEmbed.isEmbed
       });
 
     } catch (error) {
