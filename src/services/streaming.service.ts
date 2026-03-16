@@ -2,6 +2,7 @@ import { MockExtractor } from '../extractors/mock.extractor';
 import { VidSrcExtractor } from '../extractors/vidsrc.extractor';
 import { NuclearExtractor } from '../extractors/nuclear.extractor';
 import { FastExtractor } from '../extractors/fast.extractor';
+import { EmbedExtractor } from '../extractors/embed.extractor';
 import { CacheService } from './cache.service';
 import { StreamResponse } from '../types';
 
@@ -15,11 +16,11 @@ export class StreamingService {
   }
 
   private initializeExtractors(): void {
-    console.log('🚀 Nuclear Option Activated - Real streaming extraction');
+    console.log('🎬 Embed Player Mode - Using site players in app');
     this.extractors = [
-      new NuclearExtractor(),      // 🎯 REAL streaming links - changes daily
+      new EmbedExtractor(),       // � Site embed players (primary)
+      new NuclearExtractor(),      // 🎯 Real streaming links (backup)
       new FastExtractor(),       // ⚡ Fast backup
-      new VidSrcExtractor(),      // Backup option
       new MockExtractor(),        // Final fallback
     ];
   }

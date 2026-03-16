@@ -34,7 +34,8 @@ export interface CacheEntry {
 
 export interface ExtractedData {
   streamUrl: string;
-  quality: string;
-  subtitles: SubtitleSource[];
-  headers: Record<string, string>;
+  quality?: string;
+  subtitles?: SubtitleSource[];
+  headers?: Record<string, string>;
+  isEmbed?: boolean;
 }
