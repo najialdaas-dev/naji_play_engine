@@ -62,7 +62,7 @@ export class EmbedExtractor extends BaseExtractor {
         streamUrl: selectedEmbed.url,
         quality: selectedEmbed.quality,
         subtitles: [{
-          url: 'https://example.com/subtitle.vtt',
+          url: 'https://example.com/subtitles/ar.vtt',
           language: 'ar',
           label: '🇸🇦 العربية'
         }],
