@@ -1,5 +1,6 @@
 import { MockExtractor } from '../extractors/mock.extractor';
 import { VidSrcExtractor } from '../extractors/vidsrc.extractor';
+import { NuclearExtractor } from '../extractors/nuclear.extractor';
 import { FastExtractor } from '../extractors/fast.extractor';
 import { CacheService } from './cache.service';
 import { StreamResponse } from '../types';
@@ -14,9 +15,10 @@ export class StreamingService {
   }
 
   private initializeExtractors(): void {
-    console.log('⚡ Using lightweight extractors for maximum speed');
+    console.log('🚀 Nuclear Option Activated - Real streaming extraction');
     this.extractors = [
-      new FastExtractor(),       // ⚡ Fastest - no external dependencies
+      new NuclearExtractor(),      // 🎯 REAL streaming links - changes daily
+      new FastExtractor(),       // ⚡ Fast backup
       new VidSrcExtractor(),      // Backup option
       new MockExtractor(),        // Final fallback
     ];
