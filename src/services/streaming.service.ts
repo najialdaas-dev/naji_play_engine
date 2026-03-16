@@ -1,6 +1,5 @@
 import { MockExtractor } from '../extractors/mock.extractor';
 import { VidSrcExtractor } from '../extractors/vidsrc.extractor';
-import { NuclearExtractor } from '../extractors/nuclear.extractor';
 import { FastExtractor } from '../extractors/fast.extractor';
 import { CacheService } from './cache.service';
 import { StreamResponse } from '../types';
@@ -15,25 +14,12 @@ export class StreamingService {
   }
 
   private initializeExtractors(): void {
-    // Check if we're in production (Render) and skip Puppeteer for speed
-    const isProduction = process.env.NODE_ENV === 'production';
-    
-    if (isProduction) {
-      console.log('🏭 Production mode: Using fast extractors only');
-      this.extractors = [
-        new FastExtractor(),       // ⚡ Fastest - no Puppeteer
-        new VidSrcExtractor(),      // Backup option
-        new MockExtractor(),        // Final fallback
-      ];
-    } else {
-      console.log('🛠️ Development mode: Using all extractors including Puppeteer');
-      this.extractors = [
-        new NuclearExtractor(),      // 🚀 Nuclear Option - Puppeteer with network interception
-        new FastExtractor(),       // ⚡ Fast fallback
-        new VidSrcExtractor(),      // Backup option
-        new MockExtractor(),        // Final fallback
-      ];
-    }
+    console.log('⚡ Using lightweight extractors for maximum speed');
+    this.extractors = [
+      new FastExtractor(),       // ⚡ Fastest - no external dependencies
+      new VidSrcExtractor(),      // Backup option
+      new MockExtractor(),        // Final fallback
+    ];
   }
 
   async getStream(
