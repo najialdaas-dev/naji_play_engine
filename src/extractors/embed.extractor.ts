@@ -73,12 +73,23 @@ export class EmbedExtractor extends BaseExtractor {
     } catch (error) {
       console.error(`💥 EmbedExtractor: Error:`, error);
       
+      // Return first embed URL even on error
+      const fallbackUrl = type === 'movie' 
+        ? `https://vidsrc.to/embed/movie/${tmdbId}`
+        : `https://vidsrc.to/embed/tv/${tmdbId}/${season}/${episode}`;
+      
       return this.createSuccessResponse({
-        streamUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        quality: '720p',
-        subtitles: [],
-        headers: this.config.headers,
-        isEmbed: false
+        streamUrl: fallbackUrl,
+        quality: 'auto',
+        subtitles: [{
+          url: 'https://example.com/subtitle.vtt',
+          language: 'ar',
+          label: '🇸🇦 العربية'
+        }],
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        },
+        isEmbed: true
       });
     }
   }

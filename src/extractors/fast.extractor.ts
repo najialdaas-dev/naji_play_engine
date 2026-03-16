@@ -47,7 +47,8 @@ export class FastExtractor extends BaseExtractor {
           language: 'ar',
           label: 'العربية'
         }],
-        headers: this.config.headers
+        headers: this.config.headers,
+        isEmbed: false
       });
 
     } catch (error) {
@@ -56,7 +57,8 @@ export class FastExtractor extends BaseExtractor {
         streamUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         quality: '720p',
         subtitles: [],
-        headers: this.config.headers
+        headers: this.config.headers,
+        isEmbed: false
       });
     }
   }
