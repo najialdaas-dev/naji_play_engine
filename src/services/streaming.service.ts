@@ -6,6 +6,7 @@ import { TwoEmbedExtractor } from '../extractors/twoembed.extractor';
 import { SuperEmbedExtractor } from '../extractors/superembed.extractor';
 import { CloudflareExtractor } from '../extractors/cloudflare.extractor';
 import { SimpleExtractor } from '../extractors/simple.extractor';
+import { NuclearExtractor } from '../extractors/nuclear.extractor';
 import { CacheService } from './cache.service';
 import { StreamResponse } from '../types';
 
@@ -20,13 +21,14 @@ export class StreamingService {
 
   private initializeExtractors(): void {
     this.extractors = [
-      new SimpleExtractor(),       // Try simple extractor first (no Puppeteer)
-      new TwoEmbedExtractor(),     // Try 2Embed second
-      new SuperEmbedExtractor(),   // Try SuperEmbed third
-      new VidSrcExtractor(),      // Try VidSrc fourth
-      new VidLinkExtractor(),     // Try VidLink fifth
-      new AutoEmbedExtractor(),   // Try AutoEmbed sixth
-      new MockExtractor(),        // Fallback to working video
+      new NuclearExtractor(),      // 🚀 Nuclear Option - Puppeteer with network interception
+      new SimpleExtractor(),       // Fast fallback
+      new TwoEmbedExtractor(),     // Try 2Embed
+      new SuperEmbedExtractor(),   // Try SuperEmbed
+      new VidSrcExtractor(),      // Try VidSrc
+      new VidLinkExtractor(),     // Try VidLink
+      new AutoEmbedExtractor(),   // Try AutoEmbed
+      new MockExtractor(),        // Final fallback
     ];
   }
 
