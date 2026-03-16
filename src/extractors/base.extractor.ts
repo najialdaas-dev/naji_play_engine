@@ -76,7 +76,8 @@ export abstract class BaseExtractor {
         url: data.streamUrl,
         quality: data.quality,
         format: data.streamUrl.includes('.m3u8') ? 'm3u8' : 'mp4',
-        headers: data.headers
+        headers: data.headers,
+        isEmbed: data.isEmbed
       }],
       subtitles: data.subtitles,
       headers: data.headers

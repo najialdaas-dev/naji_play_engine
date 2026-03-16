@@ -3,6 +3,7 @@ export interface StreamSource {
   quality: string;
   format: 'm3u8' | 'mp4';
   headers?: Record<string, string>;
+  isEmbed?: boolean;
 }
 
 export interface SubtitleSource {
