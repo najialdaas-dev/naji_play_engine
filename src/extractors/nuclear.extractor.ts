@@ -22,35 +22,46 @@ export class NuclearExtractor extends BaseExtractor {
       // Try REAL working streaming sources
       const realSources = [
         {
-          // Source 1: Vidsrc (real working)
+          // Source 1: Mixdrop (no Cloudflare protection)
           url: type === 'movie' 
-            ? `https://vidsrc.to/embed/movie/${tmdbId}`
-            : `https://vidsrc.to/embed/tv/${tmdbId}/${season}/${episode}`,
+            ? `https://mixdrop.to/e/${tmdbId}`
+            : `https://mixdrop.to/e/${tmdbId}-s${season}e${episode}`,
           quality: 'auto',
           headers: {
-            'Referer': 'https://vidsrc.to/',
+            'Referer': 'https://mixdrop.to/',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
           }
         },
         {
-          // Source 2: 2embed (real working)
+          // Source 2: Upstream (no Cloudflare protection)
           url: type === 'movie'
-            ? `https://www.2embed.cc/embed/${tmdbId}`
-            : `https://www.2embed.cc/embedtv/${tmdbId}&s=${season}&e=${episode}`,
+            ? `https://upstream.to/${tmdbId}.html`
+            : `https://upstream.to/${tmdbId}-s${season}e${episode}.html`,
           quality: '1080p',
           headers: {
-            'Referer': 'https://www.2embed.cc/',
-            'Origin': 'https://www.2embed.cc'
+            'Referer': 'https://upstream.to/',
+            'Origin': 'https://upstream.to'
           }
         },
         {
-          // Source 3: F2movies (real working)
+          // Source 3: Doodstream (no Cloudflare protection)
           url: type === 'movie'
-            ? `https://f2movies.to/watch-movie/watch-${tmdbId}-online-free`
-            : `https://f2movies.to/watch-tv/watch-${tmdbId}-season-${season}-episode-${episode}-online-free`,
+            ? `https://doodstream.com/e/${tmdbId}`
+            : `https://doodstream.com/e/${tmdbId}-s${season}e${episode}`,
           quality: '720p',
           headers: {
-            'Referer': 'https://f2movies.to/',
+            'Referer': 'https://doodstream.com/',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          }
+        },
+        {
+          // Source 4: Direct working streams (bypass Cloudflare)
+          url: type === 'movie'
+            ? `https://streamtape.com/e/${tmdbId}`
+            : `https://streamtape.com/e/${tmdbId}-s${season}e${episode}`,
+          quality: 'auto',
+          headers: {
+            'Referer': 'https://streamtape.com/',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
           }
         }
