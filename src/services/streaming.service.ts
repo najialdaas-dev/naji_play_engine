@@ -1,11 +1,5 @@
 import { MockExtractor } from '../extractors/mock.extractor';
 import { VidSrcExtractor } from '../extractors/vidsrc.extractor';
-import { VidLinkExtractor } from '../extractors/vidlink.extractor';
-import { AutoEmbedExtractor } from '../extractors/autoembed.extractor';
-import { TwoEmbedExtractor } from '../extractors/twoembed.extractor';
-import { SuperEmbedExtractor } from '../extractors/superembed.extractor';
-import { CloudflareExtractor } from '../extractors/cloudflare.extractor';
-import { SimpleExtractor } from '../extractors/simple.extractor';
 import { NuclearExtractor } from '../extractors/nuclear.extractor';
 import { CacheService } from './cache.service';
 import { StreamResponse } from '../types';
@@ -21,13 +15,8 @@ export class StreamingService {
 
   private initializeExtractors(): void {
     this.extractors = [
-      new NuclearExtractor(),      // 🚀 Nuclear Option - Puppeteer with network interception
-      new SimpleExtractor(),       // Fast fallback
-      new TwoEmbedExtractor(),     // Try 2Embed
-      new SuperEmbedExtractor(),   // Try SuperEmbed
-      new VidSrcExtractor(),      // Try VidSrc
-      new VidLinkExtractor(),     // Try VidLink
-      new AutoEmbedExtractor(),   // Try AutoEmbed
+      new NuclearExtractor(),      // 🚀 Nuclear Option - Primary choice
+      new VidSrcExtractor(),      // Backup option
       new MockExtractor(),        // Final fallback
     ];
   }
