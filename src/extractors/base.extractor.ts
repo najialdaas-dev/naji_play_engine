@@ -17,14 +17,16 @@ export abstract class BaseExtractor {
 
   abstract extract(tmdbId: string, type: 'movie' | 'tv', season?: number, episode?: number): Promise<StreamResponse>;
 
-  protected async makeRequest(url: string, customHeaders?: Record<string, string>): Promise<AxiosResponse> {
+  protected async makeRequest(url: string, customHeaders?: Record<string, string>, method: string = 'GET'): Promise<AxiosResponse> {
     const headers = {
       ...this.config.headers,
       ...customHeaders,
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     };
 
-    return axios.get(url, {
+    return axios({
+      method: method.toLowerCase() as 'get' | 'head',
+      url,
       headers,
       timeout: this.config.timeout,
     });

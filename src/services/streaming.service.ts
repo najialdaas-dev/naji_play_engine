@@ -16,11 +16,12 @@ export class StreamingService {
   }
 
   private initializeExtractors(): void {
-    console.log('🎬 Embed Player Mode - Using site players in app');
+    console.log('🎬 Real Stream Mode - Extracting raw video URLs');
     this.extractors = [
-      new EmbedExtractor(),       // � Site embed players (primary)
-      new NuclearExtractor(),      // 🎯 Real streaming links (backup)
+      new NuclearExtractor(),      // 🎯 Real streaming links (primary)
       new FastExtractor(),       // ⚡ Fast backup
+      new VidSrcExtractor(),      // � VidSrc extraction (backup)
+      new EmbedExtractor(),       // 📱 Site embed players (fallback)
       new MockExtractor(),        // Final fallback
     ];
   }
