@@ -22,6 +22,10 @@ app.use(cors({
     'https://127.0.0.1:8080',   // Flutter web development (HTTPS)
     'capacitor://localhost',       // Capacitor (mobile app)
     'http://localhost:3000',      // Local development
+    'http://192.168.0.181:3001',  // Local IP for mobile access
+    'http://192.168.0.*',         // Allow all local network
+    'http://10.0.2.2:8080',       // Android emulator
+    'http://10.0.3.2:8080',       // Android emulator alternative
     'https://naji-play-engine-s3j7.onrender.com' // Production URL
   ],
   credentials: true,
@@ -46,6 +50,62 @@ app.get('/health', (req, res) => {
     uptime: process.uptime(),
     cache: streamingService.getCacheStats()
   });
+});
+
+// Extract stream from VidSrc embed URL
+app.post('/api/extract', async (req, res) => {
+  try {
+    const { embedUrl } = req.body;
+    
+    if (!embedUrl) {
+      return res.status(400).json({
+        success: false,
+        error: 'embedUrl is required'
+      });
+    }
+
+    console.log(`=== Starting extraction from embed URL ===`);
+    console.log(`Embed URL: ${embedUrl}`);
+
+    // Extract TMDB ID and type from embed URL
+    const movieMatch = embedUrl.match(/\/movie\/(\d+)/);
+    const tvMatch = embedUrl.match(/\/tv\/(\d+)\/(\d+)\/(\d+)/);
+    
+    let tmdbId: string;
+    let type: 'movie' | 'tv';
+    let seasonNum: number | undefined;
+    let episodeNum: number | undefined;
+
+    if (movieMatch) {
+      tmdbId = movieMatch[1];
+      type = 'movie';
+    } else if (tvMatch) {
+      tmdbId = tvMatch[1];
+      type = 'tv';
+      seasonNum = parseInt(tvMatch[2]);
+      episodeNum = parseInt(tvMatch[3]);
+    } else {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid embed URL format'
+      });
+    }
+
+    console.log(`Extracted: TMDB ID=${tmdbId}, Type=${type}, Season=${seasonNum}, Episode=${episodeNum}`);
+
+    // Use streaming service to extract real stream
+    const result = await streamingService.getStream(tmdbId, type, seasonNum, episodeNum);
+
+    console.log(`=== Extraction complete ===`);
+    res.json(result);
+
+  } catch (error) {
+    console.error('Extraction error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error during extraction'
+    });
+  }
 });
 
 // Main streaming endpoint
