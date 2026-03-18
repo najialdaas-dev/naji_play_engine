@@ -3,6 +3,7 @@ import { VidSrcExtractor } from '../extractors/vidsrc.extractor';
 import { NuclearExtractor } from '../extractors/nuclear.extractor';
 import { FastExtractor } from '../extractors/fast.extractor';
 import { EmbedExtractor } from '../extractors/embed.extractor';
+import { VidSrcEmbedExtractor } from '../extractors/vidsrc-embed.extractor';
 import { CacheService } from './cache.service';
 import { StreamResponse } from '../types';
 
@@ -16,11 +17,12 @@ export class StreamingService {
   }
 
   private initializeExtractors(): void {
-    console.log('🎬 Real Stream Mode - Extracting raw video URLs');
+    console.log('🎬 VidSrc Embed Mode - Extracting from VidSrc embed pages');
     this.extractors = [
-      new NuclearExtractor(),      // 🎯 Real streaming links (primary)
+      new VidSrcEmbedExtractor(),  // 🎬 Extract from VidSrc embed pages (primary)
+      new NuclearExtractor(),      // 🎯 Real streaming links (backup)
       new FastExtractor(),       // ⚡ Fast backup
-      new VidSrcExtractor(),      // � VidSrc extraction (backup)
+      new VidSrcExtractor(),      // 🎬 VidSrc extraction (backup)
       new EmbedExtractor(),       // 📱 Site embed players (fallback)
       new MockExtractor(),        // Final fallback
     ];
